@@ -5,8 +5,8 @@ const config = require("../../config");
 
 module.exports = new MessageCommand({
     command: {
-        name: 'setprefix',
-        description: 'Set prefix for this guild.',
+        name: 'setgame',
+        description: 'Set the game to scan for workshop updates.',
         aliases: [],
         permissions: PermissionFlagsBits.ManageGuild
     },
@@ -22,28 +22,20 @@ module.exports = new MessageCommand({
     run: async (client, message, args) => {
         if (!args[0]) {
             await message.reply({
-                content: 'You must provide the prefix!'
+                content: 'You must provide the app id!'
             });
 
             return;
         }
 
-        if (args[0].length > 5) {
-            await message.reply({
-                content: 'The prefix is too long! (' + args[0].length + ' > 5)'
-            });
-
-            return;
-        }
-
-        if (args[0] === config.commands.prefix) {
-            client.database.delete('prefix-' + message.guild.id);
+        if (args[0] === config.commands.appid) {
+            client.database.delete('appid-' + message.guild.id);
         } else {
-            client.database.set('prefix-' + message.guild.id, args[0]);
+            client.database.set('appid-' + message.guild.id, args[0]);
         }
 
         await message.reply({
-            content: 'Successfully updated the prefix to \`' + args[0] + '\`.'
+            content: 'Successfully updated the appid to \`' + args[0] + '\`.'
         });
     }
 }).toJSON();

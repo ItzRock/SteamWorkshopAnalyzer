@@ -1,4 +1,4 @@
-const { Client, Collection, Partials } = require("discord.js");
+const { Client, Collection, Partials, EmbedBuilder, WebhookClient } = require("discord.js");
 const CommandsHandler = require("./handler/CommandsHandler");
 const { warn, error, info, success } = require("../utils/Console");
 const config = require("../config");
@@ -24,9 +24,7 @@ class DiscordBot extends Client {
     login_attempts = 0;
     login_timestamp = 0;
     statusMessages = [
-        { name: 'Status 1', type: 4 },
-        { name: 'Status 2', type: 4 },
-        { name: 'Status 3', type: 4 }
+        { name: 'Looking for Workshop items.', type: 4 },
     ];
 
     commands_handler = new CommandsHandler(this);
@@ -48,11 +46,11 @@ class DiscordBot extends Client {
                 activities: [{
                     name: 'keep this empty',
                     type: 4,
-                    state: 'DiscordJS-V14-Bot-Template v3'
+                    state: 'Starting...'
                 }]
             }
         });
-        
+
         new CommandsListener(this);
         new ComponentsListener(this);
     }
@@ -72,6 +70,7 @@ class DiscordBot extends Client {
 
         try {
             await this.login(process.env.CLIENT_TOKEN);
+            this.config = config
             this.commands_handler.load();
             this.components_handler.load();
             this.events_handler.load();
