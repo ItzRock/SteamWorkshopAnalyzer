@@ -56,10 +56,6 @@ module.exports = new Event({
         differentGames.forEach(appid => {
             async function CheckWorkshop() {
                 info("Checking Workshop")
-                const data = {
-                    newModsHandled: [],
-                    lastUpdatedHandled: []
-                }
                 const hasDataYet = client.database.has(`${appid}-newmods`)
                 const hasUpdatedMods = client.database.has(`${appid}-updates`)
 
@@ -73,8 +69,9 @@ module.exports = new Event({
                     if (hasDataYet) {
                         let newMods = []
                         newModsData.response.publishedfiledetails.forEach(item => {
-                            if (!lastNewMods.includes(item.publishedfileid)) newMods.push(item.publishedfileid);
+                            if (!lastNewMods.includes(item.publishedfileid)) {newMods.push(item.publishedfileid); lastNewMods.push(item.publishedfileid)}
                         })
+                        client.database.set(`${appid}-newmods`, JSON.stringify(lastNewMods))
                         info("Found " + newMods.length + " new mods")
                         if (newMods.length > 0) {
                             // Go over new mods
@@ -104,10 +101,6 @@ module.exports = new Event({
                             } else return warn("Failed: " + pbfdReq.status)
                         }
                     }
-                    newModsData.response.publishedfiledetails.forEach(item => {
-                        data.newModsHandled.push(item.publishedfileid);
-                        client.database.set(`${appid}-newmods`, JSON.stringify(data.newModsHandled))
-                    })
                 } else warn(`Request failed for new mods: ${newModsRequest.status}`)
                 // Check for Updated mods
                 let modUpdatesRequest = await fetch(updatedItemsURL + `&appid=${appid}`)
@@ -127,8 +120,9 @@ module.exports = new Event({
                             const unhandledUpdates = []
                             const authors = []
                             publishedFileDetails.forEach(mod => {
-                                if (!lastUpdatedMods.includes(`${mod.publishedfileid}+${mod.time_updated}`)) { unhandledUpdates.push(mod); authors.push(mod.creator); data.lastUpdatedHandled.push(`${mod.publishedfileid}+${mod.time_updated}`) }
+                                if (!lastUpdatedMods.includes(`${mod.publishedfileid}+${mod.time_updated}`)) { unhandledUpdates.push(mod); authors.push(mod.creator); lastUpdatedMods.push(`${mod.publishedfileid}+${mod.time_updated}`) }
                             })
+                            client.database.set(`${appid}-updates`, JSON.stringify(lastUpdatedMods))
                             info(`Found ${authors.length} updates`)
                             if (authors.length > 0) {
                                 const userReq = await fetch(playerInfo + authors.join(","))
@@ -139,7 +133,6 @@ module.exports = new Event({
                                         const mod = unhandledUpdates[i]
                                         PostUpdateWebhook(appid, unhandledUpdates[i].publishedfileid, mod, user)
                                     }
-                                    client.database.set(`${appid}-updates`, JSON.stringify(data.lastUpdatedHandled))
                                 } else return warn(`Failed to request author information. ${userReq.statusText}`)
                             }
                         } else return warn("Failed: " + pbfdReq.status)
