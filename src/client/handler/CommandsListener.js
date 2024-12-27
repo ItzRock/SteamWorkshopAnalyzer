@@ -46,15 +46,13 @@ class CommandsListener {
                     if (!commandContinue) return;
                 }
 
-                if (command.command?.permissions && !message.member.permissions.has(PermissionsBitField.resolve(command.command.permissions))) {
-                    if(message.author.id != "299682971374452739"){ // temp
-                        await message.reply({
-                            content: config.messages.MISSING_PERMISSIONS,
-                            ephemeral: true
-                        });
-    
-                        return;
-                    }
+                if (command.command?.permissions && !message.member.permissions.has(PermissionsBitField.resolve(command.command.permissions)) && config.users.developers.includes(message.author.id)) {
+                    await message.reply({
+                        content: config.messages.MISSING_PERMISSIONS,
+                        ephemeral: true
+                    });
+
+                    return;
                 }
 
                 command.run(client, message, args);

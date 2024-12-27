@@ -27,6 +27,6 @@ module.exports = new ApplicationCommand({
      * @param {ChatInputCommandInteraction} interaction 
      */
     run: async (client, interaction) => {
-        const message = await interaction.reply({content: "beep boop analyzing..."})
+        const message = await interaction.reply({content: "Not implemented yet.", ephemeral: true})
     }
 }).toJSON();

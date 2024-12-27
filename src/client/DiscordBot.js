@@ -25,6 +25,7 @@ class DiscordBot extends Client {
     login_timestamp = 0;
     statusMessages = [
         { name: 'Looking for Workshop items.', type: 4 },
+        
     ];
 
     commands_handler = new CommandsHandler(this);
