@@ -7,7 +7,7 @@ const ComponentsHandler = require("./handler/ComponentsHandler");
 const ComponentsListener = require("./handler/ComponentsListener");
 const EventsHandler = require("./handler/EventsHandler");
 const { QuickYAML } = require('quick-yaml.db');
-
+const { SteamCmd } = require("steamcmd-interface")
 class DiscordBot extends Client {
     collection = {
         application_commands: new Collection(),
@@ -31,8 +31,7 @@ class DiscordBot extends Client {
     commands_handler = new CommandsHandler(this);
     components_handler = new ComponentsHandler(this);
     events_handler = new EventsHandler(this);
-    database = new QuickYAML(config.database.path);
-
+    database = new QuickYAML(config.database.path);      
     constructor() {
         super({
             intents: 3276799,

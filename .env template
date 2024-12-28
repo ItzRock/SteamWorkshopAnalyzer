@@ -1,0 +1,3 @@
+# Discord bot configuration
+CLIENT_TOKEN="token"
+STEAM_API_KEY= "https://steamcommunity.com/dev/apikey"

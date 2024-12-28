@@ -2,12 +2,17 @@ require('dotenv').config();
 const fs = require('fs');
 const DiscordBot = require('./client/DiscordBot');
 
-fs.writeFileSync('./terminal.log', '', 'utf-8');
-const client = new DiscordBot();
+async function run() {
+    fs.writeFileSync('./terminal.log', '', 'utf-8');
+    const client = new DiscordBot();
 
-module.exports = client;
+    client.steam =
 
-client.connect();
+    module.exports = client;
 
-process.on('unhandledRejection', console.error);
-process.on('uncaughtException', console.error);
+    client.connect();
+
+    process.on('unhandledRejection', console.error);
+    process.on('uncaughtException', console.error);
+}
+run()
