@@ -7,7 +7,6 @@ const ComponentsHandler = require("./handler/ComponentsHandler");
 const ComponentsListener = require("./handler/ComponentsListener");
 const EventsHandler = require("./handler/EventsHandler");
 const { QuickYAML } = require('quick-yaml.db');
-const { SteamCmd } = require("steamcmd-interface")
 class DiscordBot extends Client {
     collection = {
         application_commands: new Collection(),
