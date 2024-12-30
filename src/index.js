@@ -6,7 +6,7 @@ async function run() {
     fs.writeFileSync('./terminal.log', '', 'utf-8');
     const client = new DiscordBot();
 
-    client.steam =
+    client.steam = undefined;
 
     module.exports = client;
 
