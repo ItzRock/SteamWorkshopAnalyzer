@@ -23,8 +23,10 @@ class DiscordBot extends Client {
     login_attempts = 0;
     login_timestamp = 0;
     statusMessages = [
-        { name: 'Looking for Workshop items.', type: 4 },
-        
+        { name: 'Browsing the Steam Workshop', emoji: "🛠️", type: 4 },
+        { name: 'Watching SpöökTube clips', emoji: "📺", type: 4 },
+        { name: 'Content Warning', type: 0 },
+        { name: 'with a rocket launcher', type: 0 }, // lmao idk         
     ];
 
     commands_handler = new CommandsHandler(this);
@@ -78,6 +80,7 @@ class DiscordBot extends Client {
             warn('Attempting to register application commands... (this might take a while!)');
             await this.commands_handler.registerApplicationCommands(config.development);
             success('Successfully registered application commands. For specific guild? ' + (config.development.enabled ? 'Yes' : 'No'));
+            console.log("READY") // to signal my pterodactyl egg that the program is started
         } catch (err) {
             error('Failed to connect to the Discord bot, retrying...');
             error(err);
