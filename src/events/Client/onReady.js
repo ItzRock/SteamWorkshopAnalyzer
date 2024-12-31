@@ -1,6 +1,8 @@
 const { success, info, warn } = require("../../utils/Console");
 const Event = require("../../structure/Event");
 const { EmbedBuilder, WebhookClient } = require("discord.js")
+function formatBytes(a,b=2){if(0===a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(Math.log(a)/Math.log(1024));return parseFloat((a/Math.pow(1024,d)).toFixed(c))+""+["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"][d]}
+const parser = require("../../utils/MarkdownParser")
 module.exports = new Event({
     event: 'ready',
     once: true,
@@ -31,13 +33,31 @@ module.exports = new Event({
                 .setTitle(filedetails.time_updated == filedetails.time_created ? filedetails.title : filedetails.title + " has updated.")
                 .setURL(`https://steamcommunity.com/sharedfiles/filedetails/?id=${itemId}`)
                 .setThumbnail(filedetails.preview_url)
-                .setDescription(filedetails.description > 250 ? filedetails.description.substring(0, 250) + "..." : filedetails.description)
+                .setDescription(parser.SteamToDiscord(filedetails.description > 250 ? filedetails.description.substring(0, 250) + "..." : filedetails.description))
                 .setColor("#00b0f4")
                 .setFooter({
                     text: client.user.displayName,
                     iconURL: client.user.avatarURL(),
                 })
-                .setTimestamp(filedetails.time_updated * 1000);
+                .setTimestamp(filedetails.time_updated * 1000)
+                .addFields(
+                    {
+                        name: "Subcriptions",
+                        value: `\`${filedetails.lifetime_subscriptions}\` Downloads`,
+                        inline: true
+                    },
+                    {
+                        name: "Favourites",
+                        value: `\`${filedetails.favorited}\` Favourites`,
+                        inline: true
+                    },
+                    {
+                        name: "File Size",
+                        value: formatBytes(filedetails.file_size),
+                        inline: true
+                    },
+
+                );
 
             client.guilds.cache.forEach(guild => {
                 if (client.database.has('webhook-' + guild.id)) {
@@ -69,7 +89,7 @@ module.exports = new Event({
                     if (hasDataYet) {
                         let newMods = []
                         newModsData.response.publishedfiledetails.forEach(item => {
-                            if (!lastNewMods.includes(item.publishedfileid)) {newMods.push(item.publishedfileid); lastNewMods.push(item.publishedfileid)}
+                            if (!lastNewMods.includes(item.publishedfileid)) { newMods.push(item.publishedfileid); lastNewMods.push(item.publishedfileid) }
                         })
                         client.database.set(`${appid}-newmods`, JSON.stringify(lastNewMods))
                         info("Found " + newMods.length + " new mods")
