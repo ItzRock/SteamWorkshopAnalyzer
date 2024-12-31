@@ -61,7 +61,7 @@ class DiscordBot extends Client {
         setInterval(() => {
             this.user.setPresence({ activities: [this.statusMessages[index]] });
             index = (index + 1) % this.statusMessages.length;
-        }, 4000);
+        }, 600000);
     }
 
     connect = async () => {
