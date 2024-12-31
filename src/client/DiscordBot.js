@@ -57,7 +57,9 @@ class DiscordBot extends Client {
     }
 
     startStatusRotation = () => {
-        let index = 0;
+        let index = 0;+
+        this.user.setPresence({ activities: [this.statusMessages[index]] });
+        index = (index + 1) % this.statusMessages.length;
         setInterval(() => {
             this.user.setPresence({ activities: [this.statusMessages[index]] });
             index = (index + 1) % this.statusMessages.length;
