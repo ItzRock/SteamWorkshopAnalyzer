@@ -36,8 +36,8 @@ module.exports = new Event({
                 .setDescription(parser.SteamToDiscord(filedetails.description.length > 1000 ? filedetails.description.substring(0, 1000) + "..." : filedetails.description))
                 .setColor("#00b0f4")
                 .setFooter({
-                    text: client.user.displayName,
-                    iconURL: client.user.avatarURL(),
+                    text: authorData.personaname,
+                    iconURL: authorData.profileurl,
                 })
                 .setTimestamp(filedetails.time_updated * 1000)
                 .addFields(
