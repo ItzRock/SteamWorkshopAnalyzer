@@ -33,7 +33,7 @@ module.exports = new Event({
                 .setTitle(filedetails.time_updated == filedetails.time_created ? filedetails.title : filedetails.title + " has updated.")
                 .setURL(`https://steamcommunity.com/sharedfiles/filedetails/?id=${itemId}`)
                 .setThumbnail(filedetails.preview_url)
-                .setDescription(parser.SteamToDiscord(filedetails.description > 250 ? filedetails.description.substring(0, 250) + "..." : filedetails.description))
+                .setDescription(parser.SteamToDiscord(filedetails.description.length > 1000 ? filedetails.description.substring(0, 1000) + "..." : filedetails.description))
                 .setColor("#00b0f4")
                 .setFooter({
                     text: client.user.displayName,
