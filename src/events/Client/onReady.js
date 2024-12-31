@@ -28,7 +28,7 @@ module.exports = new Event({
                     url: authorData.profileurl,
                     iconURL: authorData.avatar,
                 })
-                .setTitle(filedetails.time_updated == filedetails.time_created ? filedetails.title : filedetails.title + "has updated.")
+                .setTitle(filedetails.time_updated == filedetails.time_created ? filedetails.title : filedetails.title + " has updated.")
                 .setURL(`https://steamcommunity.com/sharedfiles/filedetails/?id=${itemId}`)
                 .setThumbnail(filedetails.preview_url)
                 .setDescription(filedetails.description > 250 ? filedetails.description.substring(0, 250) + "..." : filedetails.description)
