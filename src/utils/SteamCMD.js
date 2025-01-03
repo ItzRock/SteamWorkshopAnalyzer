@@ -6,7 +6,7 @@ const downloadWorkshopItem = (appid, fileid) => {
     let steamcmd
 
     const args = [
-        "+force_install_dir", "../output",
+        "+force_install_dir",  process.cwd(), "/output",
         "+login", "anonymous",
         "+workshop_download_item", appid, fileid,
         "+quit"
@@ -16,7 +16,7 @@ const downloadWorkshopItem = (appid, fileid) => {
         steamcmdPath = "steamcmd "; // assuming steamcmd is a global
 
         steamcmd = exec(steamcmdPath + args.join(" "), (error, stdout, stderr)=> {
-            
+
         });
     } else if (platform === "win32") {
         steamcmdPath = "./bin/steamcmd/steamcmd.exe";
