@@ -4,9 +4,9 @@ const downloadWorkshopItem = (appid, fileid) => {
     let steamcmdPath;
 
     if (platform === "linux") {
-        steamcmdPath = "../../bin/steamcmd/steamcmd.sh";
+        steamcmdPath = "steamcmd"; // assuming steamcmd is a global
     } else if (platform === "win32") {
-        steamcmdPath = "../../bin/steamcmd/steamcmd.exe";
+        steamcmdPath = "./bin/steamcmd/steamcmd.exe";
     } else {
         console.warn("SteamCMD is not supported on this platform.");
         return;

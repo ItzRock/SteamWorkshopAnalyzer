@@ -3,12 +3,12 @@ const DiscordBot = require("../../client/DiscordBot");
 const ApplicationCommand = require("../../structure/ApplicationCommand");
 const downloadWorkshopItem = require("../../utils/SteamCMD")
 require("moment-duration-format");
-const zip = require("../../utils/zip")
+const ilspycmd = require("../../utils/ilspycmd")
 const fs = require("fs")
 module.exports = new ApplicationCommand({
     command: {
-        name: 'download',
-        description: 'Download a Steam Workshop Package',
+        name: 'source',
+        description: 'Decompile and view the source of a .net workshop item.',
         type: 1,
         options: [{
             name: "workshopurl",
@@ -37,15 +37,36 @@ module.exports = new ApplicationCommand({
         const workshopid = temp[temp.length -1]
         const testPattern = /[0-9]+/
 
+        let tasksStarted = 0
+        const attachments = []
+        async function SearchFolder(path){
+            const items = fs.readdirSync(path)
+            items.forEach(file => {
+                if(fs.statSync(`${path}/${file}`).isDirectory()){ SearchFolder(`${path}/${file}`) }
+                if(file.includes(".dll")){
+                    tasksStarted++;
+                    const promise = ilspycmd(`${path}/${file}`)
+                    promise.then((data)=>{
+                        tasksStarted--;
+                        console.log(tasksStarted);
+                        
+                        attachments.push({name: file.replace(".dll",".cs"), attachment: new Buffer.from(data.data)})  
+                        if(tasksStarted == 0){
+                            message.edit({content: "Here is the source of all the workshop items.", files: attachments})
+                        }
+                    })
+                }
+            })
+        }
+
         if(testPattern.test(workshopid)){
             try {
                 const steamcmd = downloadWorkshopItem(appid, workshopid)
                 steamcmd.on("exit", async ()=> {
                     const path = `bin/output/steamapps/workshop/content/${appid}/${workshopid}`
                     if(fs.existsSync(path)){
-                        const data = await zip(path)
-                        message.edit({content: "Here is the zip downloaded workshop item.", files: [{name: "workshop.zip", attachment: data}]})
-                    } else message.edit({ephemeral: true, content: "Unable to find package. Are you sure the workshop item is for the same game this server is associated with?"})
+                        SearchFolder(path)
+                    } else message.edit({ephemeral: true, content: "Unable to find package. Are you sure the workshop item is for the same game this server is associated with?"}) // later try to find the app id from some steam request... or ask the user 
                 })   
             } catch (error) {
                 console.log(error);

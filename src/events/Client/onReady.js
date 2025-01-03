@@ -3,6 +3,7 @@ const Event = require("../../structure/Event");
 const { EmbedBuilder, WebhookClient } = require("discord.js")
 function formatBytes(a,b=2){if(0===a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(Math.log(a)/Math.log(1024));return parseFloat((a/Math.pow(1024,d)).toFixed(c))+""+["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"][d]}
 const parser = require("../../utils/MarkdownParser")
+const fs = require("fs/promises")
 module.exports = new Event({
     event: 'ready',
     once: true,
@@ -160,8 +161,14 @@ module.exports = new Event({
                 } else warn(`Request failed for new mods: ${modUpdatesRequest.status}`)
 
             }
+            function PurgeSteamCache() {
+                info("PURGING STEAM CACHE")
+                fs.rmdir("bin/output/", { recursive: true, force: true})
+            }
             setInterval(CheckWorkshop, client.config.commands.interval * 1000)
+            setInterval(PurgeSteamCache,3600000) // Purge cache once an hour
             CheckWorkshop()
+            PurgeSteamCache()
         })
     }
 }).toJSON();
