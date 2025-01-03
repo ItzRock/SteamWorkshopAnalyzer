@@ -163,7 +163,8 @@ module.exports = new Event({
             }
             function PurgeSteamCache() {
                 info("PURGING STEAM CACHE")
-                fs.rmdir("bin/output/", { recursive: true, force: true})
+                fs.rmdir("bin/output/", { force: true})
+                fs.mkdir("bin/output")
             }
             setInterval(CheckWorkshop, client.config.commands.interval * 1000)
             setInterval(PurgeSteamCache,3600000) // Purge cache once an hour

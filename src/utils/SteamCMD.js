@@ -6,7 +6,7 @@ const downloadWorkshopItem = (appid, fileid) => {
     let steamcmd
 
     const args = [
-        "+force_install_dir",  process.cwd(), "/output",
+        "+force_install_dir", `${platform == "win32" ? ".." : `${process.cwd()}/bin`}/output`,
         "+login", "anonymous",
         "+workshop_download_item", appid, fileid,
         "+quit"
@@ -25,10 +25,6 @@ const downloadWorkshopItem = (appid, fileid) => {
         console.warn("SteamCMD is not supported on this platform.");
         return;
     }
-
-    steamcmd.on("error", (error) => {
-        console.error(`Failed to start SteamCMD: ${error.message}`);
-    });
     return steamcmd
 };
 module.exports = downloadWorkshopItem
